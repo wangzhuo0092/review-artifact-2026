@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+_baselines/crowd_bt/build/
+outputs/
+
+/data/vision_arena.csv
