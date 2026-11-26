@@ -18,9 +18,9 @@ use the same four columns.
 | `chatbot_arena.csv` | Chatbot Arena | 20 | 13,383 | 33,000 | 9,706 |
 | `conha.csv` | ConHa | 8 | 40 | 1,531 | 0 |
 | `humaine.csv` | HUMAINE | 27 | 1,977 | 105,220 | 33,656 |
-| `ihq_all.csv` | IHQ-all | 28 | 112 | 4,074 | 248 |
-| `ihq_screened.csv` | IHQ-screened | 28 | 50 | 2,012 | 124 |
-| `ihq_unscreened.csv` | IHQ-unscreened | 28 | 62 | 2,062 | 124 |
+| `ihq_all.csv` | IHQ-all | 28 | 112 | 4,074 | 0 |
+| `ihq_screened.csv` | IHQ-screened | 28 | 50 | 2,012 | 0 |
+| `ihq_unscreened.csv` | IHQ-unscreened | 28 | 62 | 2,062 | 0 |
 
 The files preserve the input row order, the displayed A/B orientation, model
 names, and repeat comparisons. The conversion normalizes both Arena tie
