@@ -168,8 +168,7 @@ def _runs(args, config, external):
         yield from _consensus(args, load_data("ihq_all", args.data_dir), config)
         return
     for name in args.datasets:
-        calibration = args.study in ("scaling", "perturbation") and name.startswith("ihq")
-        data = load_data(name, args.data_dir, calibration=calibration)
+        data = load_data(name, args.data_dir)
         if args.study == "perturbation":
             data = data.subset((data.a != data.b) | data.golden)
         for method in args.methods:

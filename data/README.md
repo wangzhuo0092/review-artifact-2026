@@ -33,35 +33,10 @@ comparisons. Annotator pseudonyms preserve their ordering in the original
 fit loader. Prompts, outputs, timestamps, source row identifiers, and the
 pseudonym correspondence are omitted.
 
-The separate `ihq_calibration.csv`, `ihq_screened_calibration.csv`, and
-`ihq_unscreened_calibration.csv` tables retain the original IHQ training
-comparisons for Crowd-BT where the experiment uses calibration. They add two
-columns. `correct` is the original binary calibration input used by Crowd-BT.
-`row` is the zero-based position in the corresponding historical input after
-the CSV header. To reconstruct the complete input order, place the training
-comparisons at those positions and fill the remaining positions with the
-ordinary comparisons in file order. The `calibration_*` aliases identify
-annotators with training comparisons only. These comparisons do not enter the
-Table 1 counts, RePair fits, or the selection of labels for perturbation.
-
-Run `sha256sum --ignore-missing -c SHA256SUMS` from this directory. The
-VisionArena CSV is obtained separately using the authorized reconstruction
-process below. After reconstruction, `sha256sum -c SHA256SUMS` checks all inputs.
-
-## Data sources
-
-- Search Arena uses the 7K preference release. [Dataset card](https://huggingface.co/datasets/lmarena-ai/search-arena-v1-7k)
-- VisionArena uses the battle preference release. Its access agreement includes a restriction on third-party transfer and covers annotations. Use the provider's access path for a recipient who needs to obtain the data independently. [Dataset card and access terms](https://huggingface.co/datasets/lmarena-ai/VisionArena-Battle#lmarena-visionarena-dataset-license-agreement)
-- Chatbot Arena uses the 33K cleaned conversation preference release. [Dataset card](https://huggingface.co/datasets/lmsys/chatbot_arena_conversations)
-- ConHa uses the preference comparisons from the conditional hallucination study. [Source paper](https://doi.org/10.1109/DCC62719.2025.00043)
-- HUMAINE uses the human-feedback comparison snapshot cited in the paper. [Dataset card](https://huggingface.co/datasets/ProlificAI/humaine-evaluation-dataset)
-- IHQ uses the historical 2AFC comparison snapshots distributed with the original study. Counts in current online releases can differ. [Dataset card](https://huggingface.co/datasets/Mabyduck/CLIC2024-test-human-eval), [Source paper](https://arxiv.org/abs/2510.09333)
-
-After obtaining access to the VisionArena dataset independently, save the 31
-`train-*-of-00031.parquet` shards from the provider's `data/` directory. With
-`pyarrow` installed, run the following from the artifact root. The script
-checks the converted file against the exact input snapshot before writing it.
-
-```sh
-python data/import_vision_arena.py /path/to/VisionArena-Battle/data
-```
+The IHQ CSV files include the original training comparisons used for
+Crowd-BT calibration. They have two additional columns: correct is the
+binary calibration input and row is the zero-based position in the historical
+input. Ordinary rows leave correct empty. Calibration rows are marked as
+golden and are excluded from RePair fitting, perturbation selection, and the
+Table 1 ordinary-comparison counts; Crowd-BT can use them when calibration is
+enabled.

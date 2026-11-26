@@ -49,29 +49,19 @@ def load_data(name, root=DATA_ROOT, *, calibration=False):
         raise ValueError(f"Unknown dataset: {name}")
     root = Path(root)
     rows = _read(root / f"{name}.csv")
-    if calibration and name.startswith("ihq"):
-        stem = "ihq" if name == "ihq_all" else name
-        golden = _read(root / f"{stem}_calibration.csv")
-        by_source_index = {int(row["row"]): row for row in golden}
-        count = len(rows) + len(golden)
-        if len(by_source_index) != len(golden) or not all(0 <= i < count for i in by_source_index):
-            raise ValueError(f"Invalid calibration row positions for {name}")
-        regular_rows = iter(rows)
-        rows = [
-            by_source_index[i] if i in by_source_index else next(regular_rows)
-            for i in range(count)
-        ]
     items = tuple(sorted({row[side] for row in rows for side in ("model_a", "model_b")}))
     annotators = tuple(sorted({row["judge"] for row in rows}))
     item_ids = {item: index for index, item in enumerate(items)}
     user_ids = {user: index for index, user in enumerate(annotators)}
+    golden = np.array([bool(row.get("correct", "").strip()) for row in rows], dtype=bool)
+    correct = np.array([int(row["correct"]) if row.get("correct", "").strip() else -1
+                        for row in rows], dtype=int)
     return Data(
         name, items, annotators,
         np.array([item_ids[row["model_a"]] for row in rows], dtype=int),
         np.array([item_ids[row["model_b"]] for row in rows], dtype=int),
         np.array([OUTCOMES[row["winner"]] for row in rows]),
         np.array([user_ids[row["judge"]] for row in rows], dtype=int),
-        np.arange(len(rows), dtype=int),
-        np.array(["correct" in row for row in rows]),
-        np.array([int(row.get("correct", -1)) for row in rows], dtype=int),
+        np.array([int(row.get("row", i)) for i, row in enumerate(rows)], dtype=int),
+        golden, correct,
     )
